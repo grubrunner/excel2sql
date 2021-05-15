@@ -23,7 +23,7 @@ Create an `.xls` or `.xlsx` document with one or more sheets. Each sheet should 
 
 Note: The first row in each sheet should match the exact name of the columns in the corresponding database table. You should include all columns from the database into the sheet. The order of the columns in the sheet should match the order of the database table columns
 
-## Example Usage
+## Usage
 
 ```bash
 ./excel2sql.py \
@@ -34,6 +34,11 @@ Note: The first row in each sheet should match the exact name of the columns in 
   --database dbname \
   ./Sheet.xlsx
 ```
+
+## Why?
+
+* If you want to import a lot of data into a SQL database, this may be for you, since Excel documents are easier to work with than SQL databases
+* If your data entry team is more familiar with Excel than SQL, or you do not want to give them write access to your database, then this may be for you
 
 ## Credits
 
