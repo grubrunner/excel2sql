@@ -1,6 +1,6 @@
 # Excel 2 SQL
 
-Converts Excels (`.xls` or `.xlsx`) into SQL create an insert statements and excutes those SQL statements into the specified database. If any SQL error occurs this script will abort.
+Converts Excels (`.xls` or `.xlsx`) into SQL "create" & "insert into" statements and excutes those SQL statements into the specified database. If any SQL error occurs this script will abort.
 
 This code supports Excel cells that directly reference other cells. For example if a cell's contents are "=SheetName!C2", then that would be replaced by the contents of cell "C2" in sheet "SheetName"
 
