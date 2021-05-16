@@ -8,7 +8,21 @@ This code does not currently support any other type of Excel formula.
 
 ## Prerequisites
 
-### Step 1
+You can create the excel script structure automatically or manually.
+
+### Automatic
+
+```bash
+./excel2sql.py \
+  --debug false \
+  --user root \
+  --password password \
+  --host 127.0.0.1 \
+  --database dbname \
+  ./EmptySheet.xlsx
+```
+
+### Manual: Step 1
 
 Make sure you have python3 installed at `/usr/local/bin/python3`
 
@@ -17,7 +31,7 @@ Install the following python modules:
 * pymysql
 * openpyxl
 
-### Step 2
+### Manual: Step 2
 
 Create an `.xls` or `.xlsx` document with one or more sheets. Each sheet should exactly match the name that you want the corresponding database table to have. If the database already contains a table of that name, the existing table with that name will be used.
 
