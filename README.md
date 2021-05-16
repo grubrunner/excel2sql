@@ -12,7 +12,14 @@ The `excel2sql.py` script will treat the first row as the column names of the ta
 
 You can create the excel script structure automatically or manually.
 
-### Automatic
+Make sure you have python3 installed at `/usr/local/bin/python3`
+
+Install the following python modules:
+
+* pymysql
+* openpyxl
+
+### Automatic Setup
 
 ```bash
 ./sql2empty-excel.py \
@@ -26,16 +33,7 @@ You can create the excel script structure automatically or manually.
   ./EmptySheet.xlsx
 ```
 
-### Manual: Step 1
-
-Make sure you have python3 installed at `/usr/local/bin/python3`
-
-Install the following python modules:
-
-* pymysql
-* openpyxl
-
-### Manual: Step 2
+### Manual Setup
 
 Create an `.xls` or `.xlsx` document with one or more sheets. Each sheet should exactly match the name that you want the corresponding database table to have. If the database already contains a table of that name, the existing table with that name will be used.
 
