@@ -19,6 +19,7 @@ You can create the excel script structure automatically or manually.
   --password password \
   --host 127.0.0.1 \
   --database dbname \
+  --include_example_row true \
   --table_blacklist ignored_table1,ignored_table2 \
   ./EmptySheet.xlsx
 ```
