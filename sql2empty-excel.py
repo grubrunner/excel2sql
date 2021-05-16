@@ -31,7 +31,9 @@ valid_column_identifier_names = [
 
 wb = Workbook()
 
-def main(debug, output_file, user, password, host, database):
+def main(debug, output_file, table_blacklist, user, password, host, database):
+	table_blacklist_as_list = table_blacklist.split(',')
+
 	is_debug_mode = debug == "true"
 	if is_debug_mode:
 		print("----- DEBUG MODE -----")
@@ -47,20 +49,21 @@ def main(debug, output_file, user, password, host, database):
 	for i in range(len(result)):
 		table_name = result[i][0]
 
-		cursor2 = db.cursor()
-		cursor2.execute("DESCRIBE " + table_name)
-		column_results = cursor2.fetchall()
-		if is_debug_mode:
-			print("\n\n-----\n"+ table_name)
-		
-		worksheet = wb.create_sheet(table_name)
-
-		for column_index in range(len(column_results)):
-			column_name = column_results[column_index][0]
+		if table_name not in table_blacklist_as_list:
+			cursor2 = db.cursor()
+			cursor2.execute("DESCRIBE " + table_name)
+			column_results = cursor2.fetchall()
 			if is_debug_mode:
-				print("  " + column_name)
+				print("\n\n-----\n"+ table_name)
 			
-			worksheet[valid_column_identifier_names[column_index] + "1"] = column_name
+			worksheet = wb.create_sheet(table_name)
+
+			for column_index in range(len(column_results)):
+				column_name = column_results[column_index][0]
+				if is_debug_mode:
+					print("  " + column_name)
+				
+				worksheet[valid_column_identifier_names[column_index] + "1"] = column_name
 	
 	del wb['Sheet'] # Delete the first sheet that was auto created my openpyxl
 	wb.save(output_file)
@@ -72,7 +75,8 @@ if __name__ == '__main__':
 	parser.add_argument('--user', dest='user', default='root', help='The MySQL login username')
 	parser.add_argument('--password', dest='password', default='', help='The MySQL login password')
 	parser.add_argument('--host', dest='host', default='localhost', help='The MySQL host')
+	parser.add_argument('--table_blacklist', dest='table_blacklist', default='', help='A comma seperated list (with no spaces) of table names that should not be included in the excel spreadsheet')
 	parser.add_argument('output_file', help='The output excel file (in .xls or .xlsx format)')
 	args = parser.parse_args(sys.argv[1:])
 
-	main(args.debug, args.output_file, args.user, args.password, args.host, args.database)
+	main(args.debug, args.output_file, args.table_blacklist, args.user, args.password, args.host, args.database)
