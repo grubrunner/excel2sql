@@ -12,6 +12,10 @@ to convert complete excel workbook (all sheets) to an SQL database
 The code assumes that the first row of every sheet is the column name
 Every sheet is stored in a separate table
 The sheet name is assigned as the table name for every sheet
+
+This code will assume that the first row in each sheet is the list of column names (which match the order and number of columns in the database for that respective table)
+
+This code will assume that any subsequent row that has a colored background should be ignored. This is useful for having an "example" row in each table that shows what a valid row looks like.
 '''
 
 import os
@@ -68,52 +72,53 @@ def main(debug, input_file, user, password, host, database):
 		tup = []
 		for i, rows in enumerate(ws):
 			tuprow = []
+
 			if i != 0: # Skip the first row
 				for row in rows:
-					# print(type(row.value))
-					# print(row.value)
+					if rows[0].fill.start_color.rgb == "0000000": # Ignore lines that have a colored background
+						# print(type(row.value))
+						# print(row.value)
+						if isinstance(row.value, str):
+							type_formats.append("%s")
+							# print("Detected string")
 
-					if isinstance(row.value, str):
-						type_formats.append("%s")
-						# print("Detected string")
+							row_value = ""
 
-						row_value = ""
+							# If string looks like "=Venues!A2", then it's an equation that needs to be resolved!
+							if row.value[0] == '=':
+								###
+								#  Reference: https://openpyxl.readthedocs.io/en/stable/formula.html
+								#  Example: This line below references cell "A2" in the sheet named "Clients"
+								#   "=Clients!A2"
+								#  The code block below is responsible for converting "=Clients!A2" into the value of cell "A2" in the "Clients" sheet
+								###
+								split_string = (row.value[1:]).split("!")
+								referenced_sheet_name = split_string[0]
+								referenced_cell = split_string[1]
 
-						# If string looks like "=Venues!A2", then it's an equation that needs to be resolved!
-						if row.value[0] == '=':
-							###
-							#  Reference: https://openpyxl.readthedocs.io/en/stable/formula.html
-							#  Example: This line below references cell "A2" in the sheet named "Clients"
-							#   "=Clients!A2"
-							#  The code block below is responsible for converting "=Clients!A2" into the value of cell "A2" in the "Clients" sheet
-							###
-							split_string = (row.value[1:]).split("!")
-							referenced_sheet_name = split_string[0]
-							referenced_cell = split_string[1]
+								resolved_cell = wb[referenced_sheet_name][referenced_cell]
+								row_value = resolved_cell.value
+							else:
+								row_value = str(row.value).strip()
 
-							resolved_cell = wb[referenced_sheet_name][referenced_cell]
-							row_value = resolved_cell.value
-						else:
-							row_value = str(row.value).strip()
-
-						tuprow.append(row_value)
-					elif isinstance(row.value, int):
-						type_formats.append("%s")
-						# print("Detected int")
-						tuprow.append(int(row.value))
-					elif isinstance(row.value, float):
-						type_formats.append("%s")
-						if(row.value / 10 * 10 == row.value):
+							tuprow.append(row_value)
+						elif isinstance(row.value, int):
+							type_formats.append("%s")
 							# print("Detected int")
 							tuprow.append(int(row.value))
+						elif isinstance(row.value, float):
+							type_formats.append("%s")
+							if(row.value / 10 * 10 == row.value):
+								# print("Detected int")
+								tuprow.append(int(row.value))
+							else:
+								# print("Detected float")
+								tuprow.append(float(row.value))
 						else:
-							# print("Detected float")
-							tuprow.append(float(row.value))
-					else:
-						type_formats.append("%s")
-						# print("Detected unknown")
-						tuprow.append(row.value)
-					
+							type_formats.append("%s")
+							# print("Detected unknown")
+							tuprow.append(row.value)
+						
 				tup.append(tuple(tuprow))
 
 		insQuery1 = 'INSERT INTO ' + str(sheet) + ' ('

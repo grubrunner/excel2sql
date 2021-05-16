@@ -6,6 +6,8 @@ This code supports Excel cells that directly reference other cells. For example 
 
 This code does not currently support any other type of Excel formula.
 
+The `excel2sql.py` script will treat the first row as the column names of the table. So all column names should be included. It will treat additional rows as rows in the database's table. However it will ignore any rows that have a background color. This is so that you can include an "example" row in the spreadsheet that shows what a valid row looks like. This works nicely with the `--include_example_row true` flag in the `sql2empty-excel.py` script.
+
 ## Prerequisites
 
 You can create the excel script structure automatically or manually.
