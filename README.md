@@ -13,7 +13,7 @@ You can create the excel script structure automatically or manually.
 ### Automatic
 
 ```bash
-./excel2sql.py \
+./sql2empty-excel.py \
   --debug false \
   --user root \
   --password password \
