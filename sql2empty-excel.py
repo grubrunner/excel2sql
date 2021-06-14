@@ -35,8 +35,9 @@ fill_color = PatternFill(fill_type="solid", start_color='FFC7EFF0', end_color='F
 
 wb = Workbook()
 
-def main(debug, output_file, table_blacklist, include_example_row, user, password, host, database):
+def main(debug, output_file, table_blacklist, first_table_names, include_example_row, user, password, host, database):
 	table_blacklist_as_list = table_blacklist.split(',')
+	first_table_names_as_list = first_table_names.split(',')
 
 	is_example_row_included = include_example_row == "true"
 
@@ -52,9 +53,15 @@ def main(debug, output_file, table_blacklist, include_example_row, user, passwor
 
 	result = cursor.fetchall()
 
+	table_names = first_table_names_as_list
+
 	for i in range(len(result)):
 		table_name = result[i][0]
 
+		if table_name not in table_names:
+			table_names.append(table_name)
+
+	for table_name in table_names:
 		if table_name not in table_blacklist_as_list:
 			cursor2 = db.cursor()
 			cursor2.execute("DESCRIBE " + table_name)
@@ -83,7 +90,7 @@ def main(debug, output_file, table_blacklist, include_example_row, user, passwor
 
 				last_row_results_list = list(last_row_results)
 
-				print("last_row_results len " + str())
+				# print("last_row_results len " + str())
 
 				if len((last_row_results_list)) == 1:
 					last_row_columns = list(last_row_results_list[0])
@@ -92,7 +99,7 @@ def main(debug, output_file, table_blacklist, include_example_row, user, passwor
 
 						last_row_results_column_name = last_row_columns[last_row_columns_index]
 
-						print("last_row_results_column_name type " + str(type(last_row_results_column_name)))
+						# print("last_row_results_column_name type " + str(type(last_row_results_column_name)))
 
 						worksheet[valid_column_identifier_names[last_row_columns_index] + "2"] = last_row_results_column_name
 
@@ -109,8 +116,9 @@ if __name__ == '__main__':
 	parser.add_argument('--password', dest='password', default='', help='The MySQL login password')
 	parser.add_argument('--host', dest='host', default='localhost', help='The MySQL host')
 	parser.add_argument('--table_blacklist', dest='table_blacklist', default='', help='A comma seperated list (with no spaces) of table names that should not be included in the excel spreadsheet')
+	parser.add_argument('--first_table_names', dest='first_table_names', default='', help='A comma seperated list of table namaes that need to be filled out first. If a table is not included in this list, then the order will be alphabetical')
 	parser.add_argument('--include_example_row', dest='include_example_row', default='false', help='If set to "true", the first row will have a colored background and will include the result from the last row in the database for the respective table as an example of what a valid row in this table looks like')
 	parser.add_argument('output_file', help='The output excel file (in .xls or .xlsx format)')
 	args = parser.parse_args(sys.argv[1:])
 
-	main(args.debug, args.output_file, args.table_blacklist, args.include_example_row, args.user, args.password, args.host, args.database)
+	main(args.debug, args.output_file, args.table_blacklist, args.first_table_names, args.include_example_row, args.user, args.password, args.host, args.database)
