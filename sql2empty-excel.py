@@ -62,6 +62,8 @@ def main(debug, output_file, table_blacklist, first_table_names, include_example
 			table_names.append(table_name)
 
 	for table_name in table_names:
+		if table_name == "":
+			continue;
 		if table_name not in table_blacklist_as_list:
 			cursor2 = db.cursor()
 			cursor2.execute("DESCRIBE " + table_name)
