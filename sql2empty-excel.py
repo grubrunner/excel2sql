@@ -1,4 +1,4 @@
-#! /usr/local/bin/python3
+#! /usr/bin/env python3
 
 '''
 License: MIT
@@ -31,7 +31,7 @@ fill_color = PatternFill(fill_type="solid", start_color='FFC7EFF0', end_color='F
 
 
 # # suppress annoying mysql warnings
-# warnings.filterwarnings(action='ignore', category=pymysql.Warning) 
+# warnings.filterwarnings(action='ignore', category=pymysql.Warning)
 
 wb = Workbook()
 
@@ -68,22 +68,22 @@ def main(debug, output_file, table_blacklist, first_table_names, include_example
 			column_results = cursor2.fetchall()
 			if is_debug_mode:
 				print("\n\n-----\n"+ table_name)
-			
+
 			worksheet = wb.create_sheet(table_name)
 
 			first_column_name = ""
 
 			for column_index in range(len(column_results)):
 				column_name = column_results[column_index][0]
-				
+
 				if column_index == 0:
 					first_column_name = column_name
 
 				if is_debug_mode:
 					print("  " + column_name)
-				
+
 				worksheet[valid_column_identifier_names[column_index] + "1"] = column_name
-			
+
 			if is_example_row_included:
 				cursor2.execute("SELECT * FROM " + table_name + " ORDER BY " + first_column_name + " DESC LIMIT 1")
 				last_row_results = cursor2.fetchall()
@@ -94,7 +94,7 @@ def main(debug, output_file, table_blacklist, first_table_names, include_example
 
 				if len((last_row_results_list)) == 1:
 					last_row_columns = list(last_row_results_list[0])
-					
+
 					for last_row_columns_index in range(len(last_row_columns)):
 
 						last_row_results_column_name = last_row_columns[last_row_columns_index]
@@ -104,7 +104,7 @@ def main(debug, output_file, table_blacklist, first_table_names, include_example
 						worksheet[valid_column_identifier_names[last_row_columns_index] + "2"] = last_row_results_column_name
 
 						worksheet[valid_column_identifier_names[last_row_columns_index] + "2"].fill = fill_color
-	
+
 	del wb['Sheet'] # Delete the first sheet that was auto created my openpyxl
 	wb.save(output_file)
 

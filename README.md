@@ -12,12 +12,19 @@ The `excel2sql.py` script will treat the first row as the column names of the ta
 
 You can create the excel script structure automatically or manually.
 
-Make sure you have python3 installed at `/usr/local/bin/python3`
+Make sure you have python3 available in some folder in your $PATH
 
 Install the following python modules:
 
 * pymysql
 * openpyxl
+
+You can use this command to do that:
+
+```bash
+pip3 install pymysql
+pip3 install openpyxl
+```
 
 ### Automatic Setup
 

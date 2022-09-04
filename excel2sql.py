@@ -1,4 +1,4 @@
-#! /usr/local/bin/python3
+#! /usr/bin/env python3
 
 '''
 This code was based off of: https://gist.github.com/antiproblemist/0c2694cc17d7e39e9d12
@@ -29,7 +29,7 @@ import re
 pymysql.install_as_MySQLdb()
 
 # # suppress annoying mysql warnings
-# warnings.filterwarnings(action='ignore', category=pymysql.Warning) 
+# warnings.filterwarnings(action='ignore', category=pymysql.Warning)
 
 def main(debug, input_file, user, password, host, database):
 	is_debug_mode = debug == "true"
@@ -49,7 +49,7 @@ def main(debug, input_file, user, password, host, database):
 
 	for sheet in sheets:
 		print("\nSheet name: " + sheet + "\n")
-		ws = wb[sheet] 
+		ws = wb[sheet]
 
 		columns= []
 		query = 'CREATE TABLE IF NOT EXISTS ' + str(sheet) + '(ID INTEGER PRIMARY KEY AUTOINCREMENT'
@@ -118,7 +118,7 @@ def main(debug, input_file, user, password, host, database):
 							type_formats.append("%s")
 							# print("Detected unknown")
 							tuprow.append(row.value)
-						
+
 				tup.append(tuple(tuprow))
 
 		insQuery1 = 'INSERT INTO ' + str(sheet) + ' ('
